@@ -47,7 +47,7 @@ export function Layout() {
   );
 }
 
-export default function App() {
+export default function Root() {
   return <Outlet />;
 }
 
