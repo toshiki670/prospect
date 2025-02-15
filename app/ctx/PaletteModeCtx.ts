@@ -7,5 +7,5 @@ export interface PaletteModeCtxType {
 }
 
 export const PaletteModeCtx = createContext<PaletteModeCtxType | undefined>(
-  undefined
+  undefined,
 );
