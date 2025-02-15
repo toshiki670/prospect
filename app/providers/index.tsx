@@ -1,13 +1,14 @@
-
-import { Outlet } from "react-router";
 import { CustomThemeProvider } from "./CustomThemeProvider";
 import { JSX } from "react";
 
+interface ProvidersProps {
+  children: React.ReactNode;
+}
 
-export default function Providers(): JSX.Element {
+export const Providers = ({ children }: ProvidersProps): JSX.Element => {
   return (
     <CustomThemeProvider>
-      <Outlet />
+      {children}
     </CustomThemeProvider>
   );
 };

@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import type { Route } from "./+types/root";
+import { Providers } from "./providers";
 
 export function Layout() {
   return (
@@ -18,7 +19,9 @@ export function Layout() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <Providers>
+          <Outlet />
+        </Providers>
         <ScrollRestoration />
         <Scripts />
       </body>
