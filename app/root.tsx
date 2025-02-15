@@ -6,11 +6,25 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
 import type { Route } from "./+types/root";
-
+import { useState } from "react";
+import {
+  createTheme,
+  CssBaseline,
+  PaletteMode,
+  ThemeProvider,
+} from "@mui/material";
+import { PaletteModeCtx } from "./ctx/PaletteModeCtx";
 
 export function Layout() {
+  const [mode, setMode] = useState<PaletteMode>("dark");
+
+  const theme = createTheme({
+    palette: {
+      mode,
+    },
+  });
+
   return (
     <html lang="en">
       <head>
@@ -20,7 +34,12 @@ export function Layout() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <PaletteModeCtx.Provider value={{ mode, setMode }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Outlet />
+          </ThemeProvider>
+        </PaletteModeCtx.Provider>
         <ScrollRestoration />
         <Scripts />
       </body>
