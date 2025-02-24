@@ -7,14 +7,14 @@
     "beforeDevCommand": "yarn dev",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "yarn build",
-    "frontendDist": "../dist"
+    "frontendDist": "../build/client"
   },
   "app": {
     "windows": [
       {
         "title": "prospect",
-        "width": 800,
-        "height": 600
+        "width": 1600,
+        "height": 1000
       }
     ],
     "security": {
