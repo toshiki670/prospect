@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import { load } from '@tauri-apps/plugin-store'
 
 type Theme = "dark" | "light" | "system"
 
@@ -20,13 +21,22 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
-export function ThemeProvider({
+export async function ThemeProvider({
   children,
   defaultTheme = "dark",
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => defaultTheme)
+  const [theme, setTheme] = useState(defaultTheme);
+
+  useEffect(() => {
+    // ブラウザ環境（クライアント側）でのみ Tauri のAPIを読み込む
+    (async () => {
+      const store = await load("store.json", { autoSave: true });
+      const val = await store.get<{ theme: Theme }>(storageKey);
+      setTheme(val?.theme || defaultTheme);
+    })();
+  }, [storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -48,7 +58,9 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
+    setTheme: async (theme: Theme) => {
+      const store = await load("store.json", { autoSave: true });
+      await store.set(storageKey, { theme })
       setTheme(theme)
     },
   }
