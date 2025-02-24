@@ -1,5 +1,4 @@
 import {
-  Links,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -15,7 +14,6 @@ export function Layout() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Links />
       </head>
       <body>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
