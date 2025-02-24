@@ -1,7 +1,7 @@
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/home"
 
 export function loader() {
-  return { name: "React Router" };
+  return { name: "React Router" }
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
@@ -15,5 +15,5 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         React Router Docs
       </a>
     </div>
-  );
+  )
 }

@@ -5,10 +5,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
-import type { Route } from "./+types/root";
-import "./root.css";
-import { ThemeProvider } from "./components/theme-provider";
+} from "react-router"
+import type { Route } from "./+types/root"
+import "./root.css"
+import { ThemeProvider } from "./components/theme-provider"
 
 export function Layout() {
   return (
@@ -27,27 +27,27 @@ export function Layout() {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 export default function Root() {
-  return <Outlet />;
+  return <Outlet />
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.あ";
-  let stack: string | undefined;
+  let message = "Oops!"
+  let details = "An unexpected error occurred."
+  let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "Error"
     details =
       error.status === 404
         ? "The requested page could not be found."
-        : error.statusText || details;
+        : error.statusText || details
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    details = error.message
+    stack = error.stack
   }
 
   return (
@@ -60,5 +60,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  );
+  )
 }
