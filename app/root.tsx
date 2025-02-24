@@ -7,6 +7,7 @@ import {
 import type { Route } from "./+types/root"
 import "./root.css"
 import { ThemeProvider } from "./components/theme-provider"
+import "./logging"
 
 export function Layout() {
   return (
