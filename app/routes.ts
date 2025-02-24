@@ -1,6 +1,6 @@
 import {
   index,
-  route,
+  // route,
   layout,
   type RouteConfig,
 } from "@react-router/dev/routes";
