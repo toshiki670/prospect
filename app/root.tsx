@@ -1,5 +1,4 @@
 import {
-  Links,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -8,6 +7,7 @@ import {
 import type { Route } from "./+types/root"
 import "./root.css"
 import { ThemeProvider } from "./components/theme-provider"
+import "./logging"
 
 export function Layout() {
   return (
@@ -15,7 +15,6 @@ export function Layout() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Links />
       </head>
       <body>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
