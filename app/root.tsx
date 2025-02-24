@@ -7,7 +7,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 import type { Route } from "./+types/root";
-import { Providers } from "./providers";
+import "./root.css";
+import { ThemeProvider } from "./components/theme-provider";
 
 export function Layout() {
   return (
@@ -19,9 +20,9 @@ export function Layout() {
         <Links />
       </head>
       <body>
-        <Providers>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Outlet />
-        </Providers>
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -35,7 +36,7 @@ export default function Root() {
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let details = "An unexpected error occurred.あ";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {

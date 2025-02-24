@@ -13,19 +13,25 @@
     "node": "23.x"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.3",
-    "@mui/material": "^6.4.4",
-    "@react-router/dev": "^7.1.5",
-    "@react-router/fs-routes": "^7.1.5",
-    "@react-router/node": "^7.1.5",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "@react-router/dev": "7.2.0",
+    "@react-router/fs-routes": "7.2.0",
+    "@react-router/node": "7.2.0",
+    "@tailwindcss/vite": "^4.0.7",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "isbot": "^5",
+    "lucide-react": "^0.475.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router": "^7.1.5"
+    "react-router": "7.2.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^4.0.7"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
@@ -34,8 +40,9 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "prettier": "3.5.1",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "5.7.3",
-    "vite": "^6.0.3"
+    "vite": "6.1.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
