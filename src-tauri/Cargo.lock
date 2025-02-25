@@ -3439,6 +3439,7 @@ dependencies = [
 name = "prospect"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "sea-orm",
  "serde",
  "serde_json",
