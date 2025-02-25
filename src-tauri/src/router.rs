@@ -19,12 +19,14 @@ pub struct Router {
 }
 
 impl Router {
+    #[allow(dead_code)] // TODO: delete after using
     pub fn new() -> Self {
         Self {
             routes: HashMap::new(),
         }
     }
 
+    #[allow(dead_code)] // TODO: delete after using
     pub fn add<F, Req, Res>(&mut self, path: &str, handler: F)
     where
         F: Fn(Req) -> Result<Res, String> + Send + Sync + 'static,
