@@ -1,4 +1,5 @@
 mod router;
+mod database;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -6,6 +7,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
+        .manage(database::DatabaseState::new())
         .invoke_handler(tauri::generate_handler![router::api_call])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
