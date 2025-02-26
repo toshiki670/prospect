@@ -6,16 +6,38 @@ use serde_json::Value;
 #[tauri::command]
 pub async fn api_call(
     path: String,
+    method: String,
     payload: Value,
     router: tauri::State<'_, Arc<Router>>,
 ) -> Result<Value, String> {
-    router.handle(&path, payload)
+    router.handle(&path, &method.into(), payload)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Method {
+    Get,
+    Post,
+    Put,
+    Delete,
+}
+
+impl From<String> for Method {
+    fn from(s: String) -> Self {
+        match s.as_str() {
+            "GET" => Method::Get,
+            "POST" => Method::Post,
+            "PUT" => Method::Put,
+            "DELETE" => Method::Delete,
+            _ => panic!("Invalid method: {}", s),
+        }
+    }
+}
+
+type Route = (String, Method);
 type RouteHandler = Box<dyn Fn(Value) -> Result<Value, String> + Send + Sync>;
 
 pub struct Router {
-    routes: HashMap<String, RouteHandler>,
+    routes: HashMap<Route, RouteHandler>,
 }
 
 impl Router {
@@ -27,24 +49,24 @@ impl Router {
     }
 
     #[allow(dead_code)] // TODO: delete after using
-    pub fn add<F, Req, Res>(&mut self, path: &str, handler: F)
+    pub fn add<F, Req, Res>(&mut self, path: &str, method: &Method, handler: F)
     where
         F: Fn(Req) -> Result<Res, String> + Send + Sync + 'static,
         Req: DeserializeOwned,
         Res: Serialize,
     {
-        let path = path.to_string();
+        let route = (path.to_string(), method.clone());
         let boxed_handler = Box::new(move |payload: Value| -> Result<Value, String> {
             let req = serde_json::from_value(payload).map_err(|e| e.to_string())?;
             let res = handler(req)?;
             serde_json::to_value(res).map_err(|e| e.to_string())
         });
 
-        self.routes.insert(path, boxed_handler);
+        self.routes.insert(route, boxed_handler);
     }
 
-    pub fn handle(&self, path: &str, payload: Value) -> Result<Value, String> {
-        match self.routes.get(path) {
+    pub fn handle(&self, path: &str, method: &Method, payload: Value) -> Result<Value, String> {
+        match self.routes.get(&(path.to_string(), method.clone())) {
             Some(handler) => handler(payload),
             None => Err(format!("Route not found: {}", path)),
         }
