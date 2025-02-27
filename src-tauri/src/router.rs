@@ -1,118 +1,82 @@
-use std::{collections::HashMap, sync::Arc};
+// src-tauri/src/router.rs
+use axum::{body::Body, http::Request, routing::Router};
+use serde_json::{json, Value};
+use std::sync::Arc;
+use tower::ServiceExt as _;
 
-use serde::{de::DeserializeOwned, Serialize};
-use serde_json::Value;
+pub struct RouterAdapterState(Arc<RouterAdapter>);
 
+impl RouterAdapterState {
+    pub fn new(router: Router) -> Self {
+        Self(Arc::new(RouterAdapter::new(router)))
+    }
+}
+
+pub struct RouterAdapter {
+    router: Router,
+}
+
+impl RouterAdapter {
+    pub fn new(router: Router) -> Self {
+        Self { router }
+    }
+
+    pub async fn handle_command(
+        &self,
+        path: String,
+        method: String,
+        payload: Option<Value>,
+    ) -> Result<Value, String> {
+        // リクエストの構築
+        let uri = path
+            .parse::<axum::http::Uri>()
+            .map_err(|e| format!("Invalid path: {}", e))?;
+        let body = payload.unwrap_or(json!({}));
+        let body_bytes = serde_json::to_vec(&body).map_err(|e| e.to_string())?;
+
+        // axumルーターが処理できるリクエストを構築
+        let method = method
+            .parse::<axum::http::Method>()
+            .map_err(|e| format!("Invalid method: {}", e))?;
+        let request = Request::builder()
+            .uri(uri)
+            .method(method)
+            .header("content-type", "application/json")
+            .body(Body::from(body_bytes))
+            .map_err(|e| e.to_string())?;
+
+        // axumルーターでリクエストを処理
+        let response = self
+            .router
+            .clone()
+            .oneshot(request)
+            .await
+            .map_err(|e| format!("Router error: {}", e))?;
+
+        // レスポンスの解析
+        let status = response.status();
+        let bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
+            .await
+            .map_err(|e| e.to_string())?;
+
+        if status != axum::http::StatusCode::OK {
+            return Err(format!("Error: status code {}", status));
+        }
+
+        let response_value: Value =
+            serde_json::from_slice(&bytes).map_err(|e| format!("Response parsing error: {}", e))?;
+
+        Ok(response_value)
+    }
+}
+
+// Tauriコマンドとして登録
 #[tauri::command]
-pub async fn api_call(
+pub async fn axum_api(
     path: String,
     method: String,
-    payload: Value,
-    router: tauri::State<'_, Arc<Router>>,
+    payload: Option<Value>,
+    adapter: tauri::State<'_, RouterAdapterState>,
 ) -> Result<Value, String> {
-    router.handle(&path, &method.into(), payload)
+    adapter.0.handle_command(path, method, payload).await
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Method {
-    Get,
-    Post,
-    Put,
-    Delete,
-}
-
-impl From<String> for Method {
-    fn from(s: String) -> Self {
-        match s.as_str() {
-            "GET" => Method::Get,
-            "POST" => Method::Post,
-            "PUT" => Method::Put,
-            "DELETE" => Method::Delete,
-            _ => panic!("Invalid method: {}", s),
-        }
-    }
-}
-
-type Route = (String, Method);
-type RouteHandler = Box<dyn Fn(Value) -> Result<Value, String> + Send + Sync>;
-
-pub struct Router {
-    routes: HashMap<Route, RouteHandler>,
-}
-
-impl Router {
-    #[allow(dead_code)] // TODO: delete after using
-    pub fn new() -> Self {
-        Self {
-            routes: HashMap::new(),
-        }
-    }
-
-    #[allow(dead_code)] // TODO: delete after using
-    pub fn add<F, Req, Res>(&mut self, path: &str, method: &Method, handler: F)
-    where
-        F: Fn(Req) -> Result<Res, String> + Send + Sync + 'static,
-        Req: DeserializeOwned,
-        Res: Serialize,
-    {
-        let route = (path.to_string(), method.clone());
-        let boxed_handler = Box::new(move |payload: Value| -> Result<Value, String> {
-            let req = serde_json::from_value(payload).map_err(|e| e.to_string())?;
-            let res = handler(req)?;
-            serde_json::to_value(res).map_err(|e| e.to_string())
-        });
-
-        self.routes.insert(route, boxed_handler);
-    }
-
-    pub fn handle(&self, path: &str, method: &Method, payload: Value) -> Result<Value, String> {
-        match self.routes.get(&(path.to_string(), method.clone())) {
-            Some(handler) => handler(payload),
-            None => Err(format!("Route not found: {}", path)),
-        }
-    }
-}
-
-// main.rs
-// fn main() {
-//     let mut router = Router::new();
-
-//     // ユーザー関連のルート
-//     router.add("users/get", |req: GetUserRequest| -> Result<User, String> {
-//         // 実装...
-//     });
-
-//     router.add(
-//         "users/create",
-//         |req: CreateUserRequest| -> Result<User, String> {
-//             // 実装...
-//         },
-//     );
-
-//     // タスク関連のルート
-//     router.add(
-//         "tasks/list",
-//         |_: EmptyRequest| -> Result<Vec<Task>, String> {
-//             // 実装...
-//         },
-//     );
-
-//     // ルーター自体をステートとして管理
-//     let router = Arc::new(router);
-//     let router_clone = router.clone();
-
-//     #[tauri::command]
-//     async fn api_call(
-//         path: String,
-//         payload: Value,
-//         router: State<'_, Arc<Router>>,
-//     ) -> Result<Value, String> {
-//         router.handle(&path, payload)
-//     }
-
-//     tauri::Builder::default()
-//         .manage(router_clone)
-//         .invoke_handler(tauri::generate_handler![api_call])
-//         .run(tauri::generate_context!())
-//         .expect("error while running application");
-// }
