@@ -2,10 +2,10 @@ use anyhow::Context as _;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::{path::Path, sync::Arc};
 
-pub struct DatabaseState(Option<Arc<DatabaseConnection>>);
+pub struct DatabaseState(Option<DatabaseConnection>);
 
 impl core::ops::Deref for DatabaseState {
-    type Target = Option<Arc<DatabaseConnection>>;
+    type Target = Option<DatabaseConnection>;
 
     fn deref(&'_ self) -> &'_ Self::Target {
         &self.0
