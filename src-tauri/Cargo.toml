@@ -21,7 +21,7 @@ tauri-build = { version = "2.0.6", features = [] }
 anyhow = "1.0.97"
 axum = "0.8.1"
 sea-orm = { version = "1.1.7", features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }
-serde = { version = "1.0.218", features = ["derive"] }
+serde = { workspace = true, features = ["derive"] }
 serde_json = "1.0.140"
 tauri = { version = "2.3.1", features = [] }
 tauri-plugin-log = "2.2.3"
@@ -30,3 +30,11 @@ tauri-plugin-store = "2.2.0"
 tokio = {version = "1.43.0", features = ["full"] }
 tower = "0.5.2"
 ts-rs = { version = "10.1.0", features = ["serde-compat","chrono-impl", "tokio-impl"] }
+
+ipc-if = { path = "./ipc-if" }
+
+[workspace]
+members = ["ipc-if"]
+
+[workspace.dependencies]
+serde = { version = "1.0.218" }

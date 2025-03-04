@@ -2154,6 +2154,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "ipc-if"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "ipnet"
 version = "2.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3377,6 +3384,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "ipc-if",
  "sea-orm",
  "serde",
  "serde_json",
