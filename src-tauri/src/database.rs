@@ -24,7 +24,7 @@ impl DatabaseState {
     ) -> anyhow::Result<Arc<DatabaseConnection>> {
         // アプリデータディレクトリを取得
         let app_dir = Path::new(database_path);
-        std::fs::create_dir_all(&app_dir)
+        std::fs::create_dir_all(app_dir)
             .with_context(|| format!("Failed to create app directory: {}", app_dir.display()))?;
 
         let db_path = app_dir.join("database.db");
