@@ -2158,6 +2158,7 @@ name = "ipc-if"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "ts-rs",
 ]
 
 [[package]]
@@ -3395,7 +3396,6 @@ dependencies = [
  "tauri-plugin-store",
  "tokio",
  "tower",
- "ts-rs",
 ]
 
 [[package]]
@@ -5381,7 +5381,6 @@ dependencies = [
  "chrono",
  "lazy_static",
  "thiserror 2.0.12",
- "tokio",
  "ts-rs-macros",
 ]
 
