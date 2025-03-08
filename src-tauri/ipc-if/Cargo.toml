@@ -1,0 +1,10 @@
+[package]
+name = "ipc-if"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+ts-rs = { workspace = true, features = ["chrono-impl"] }
