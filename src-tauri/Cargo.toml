@@ -35,11 +35,7 @@ tauri-plugin-opener = "2.2.6"
 tauri-plugin-store = "2.2.0"
 tokio = {version = "1.43.0", features = ["full"] }
 tower = "0.5.2"
-
-ipc-if = { path = "./ipc-if" }
-
-[workspace]
-members = ["ipc-if"]
+ts-rs = { version = "10.1.0", features = ["chrono-impl"] }
 
 [workspace.dependencies]
 serde = { version = "1.0.218" }
