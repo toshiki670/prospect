@@ -1,3 +1,6 @@
+mod database;
+mod router;
+
 use axum::{
     Json, Router,
     extract::{Path, Query, State},
@@ -6,9 +9,6 @@ use axum::{
 };
 use ipc_if::sample::*;
 use tauri::{Manager as _, path::BaseDirectory};
-
-mod database;
-mod router;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub async fn run() {
