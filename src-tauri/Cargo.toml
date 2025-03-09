@@ -7,7 +7,7 @@ authors.workspace = true
 license.workspace = true
 
 [workspace]
-members = ["ipc-if"]
+members = ["ipc-if", "migration"]
 
 [workspace.package]
 version = "0.1.0"
@@ -29,7 +29,7 @@ tauri-build = { version = "2.0.6", features = [] }
 
 [dependencies]
 ipc-if = { path = "./ipc-if" }
-
+migration = { path = "./migration" }
 anyhow = "1.0.97"
 axum = "0.8.1"
 sea-orm = { version = "1.1.7", features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }
