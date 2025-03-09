@@ -3,5 +3,5 @@
 
 #[tokio::main]
 async fn main() {
-    prospect_lib::run()
+    prospect_lib::run().await;
 }
