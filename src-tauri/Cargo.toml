@@ -7,7 +7,7 @@ authors.workspace = true
 license.workspace = true
 
 [workspace]
-members = ["ipc-if"]
+members = ["ipc-if", "migration"]
 
 [workspace.package]
 version = "0.1.0"
@@ -29,7 +29,7 @@ tauri-build = { version = "2.0.6", features = [] }
 
 [dependencies]
 ipc-if = { path = "./ipc-if" }
-
+migration = { path = "./migration" }
 anyhow = "1.0.97"
 axum = "0.8.1"
 sea-orm = { version = "1.1.7", features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }
@@ -39,9 +39,12 @@ tauri = { version = "2.3.1", features = [] }
 tauri-plugin-log = "2.2.3"
 tauri-plugin-opener = "2.2.6"
 tauri-plugin-store = "2.2.0"
-tokio = {version = "1.44.0", features = ["full"] }
+thiserror = "2.0.12"
+tokio = { workspace = true, features = ["full"] }
 tower = "0.5.2"
+tauri-plugin-fs = "2"
 
 [workspace.dependencies]
 serde = "1.0.218"
+tokio = "1.44.0"
 ts-rs = "10.1.0"
