@@ -19,6 +19,13 @@ cargo install cargo-watch
 '''
 ]
 
+[tasks.prepare_development]
+description = "Create .env file."
+category = "Preparation"
+workspace = false
+command = "cp"
+args = ["development.env", ".env"]
+
 # For the documentation
 [tasks.d]
 description = "Generate documentation for the self package"
