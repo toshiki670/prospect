@@ -34,7 +34,7 @@ pub async fn establish_connection(
     // データベース接続の作成
     let db = Database::connect(opt)
         .await
-        .map_err(|e| DatabaseError::FailedToEstablishConnection(e))?;
+        .map_err(DatabaseError::FailedToEstablishConnection)?;
 
     let state = state.clone();
     state.write().await.replace(db);
