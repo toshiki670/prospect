@@ -1,4 +1,5 @@
 mod database;
+mod infrastructure;
 mod router;
 
 use axum::{
