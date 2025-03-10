@@ -9,30 +9,20 @@ impl MigrationTrait for Migration {
         // Replace the sample below with your own migration scripts
 
         manager
-            .create_table(
+            .create_table(timestamps(
                 Table::create()
                     .table(TokyoStockExchanges::Table)
                     .if_not_exists()
-                    .col(string(TokyoStockExchanges::Id))
-                    .col(string(TokyoStockExchanges::LocalCode))
-                    .col(string(TokyoStockExchanges::EnglishName))
-                    .col(string(TokyoStockExchanges::JapaneseName))
+                    .col(pk_auto(TokyoStockExchanges::Id))
+                    .col(string(TokyoStockExchanges::LocalCode).unique_key())
+                    .col(text_null(TokyoStockExchanges::EnglishName))
+                    .col(text_null(TokyoStockExchanges::JapaneseName))
                     .col(string(TokyoStockExchanges::Section))
-                    .col(string(TokyoStockExchanges::Sector33Code))
-                    .col(string(TokyoStockExchanges::Sector17Code))
-                    .col(string(TokyoStockExchanges::SizeCode))
+                    .col(small_integer(TokyoStockExchanges::Sector33Code))
+                    .col(small_integer(TokyoStockExchanges::Sector17Code))
+                    .col(small_integer(TokyoStockExchanges::SizeCode))
                     .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_tokyo_stock_exchanges_id")
-                    .table(TokyoStockExchanges::Table)
-                    .col(TokyoStockExchanges::Id)
-                    .to_owned(),
-            )
+            ))
             .await?;
 
         manager
@@ -79,14 +69,6 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         // Replace the sample below with your own migration scripts
-
-        manager
-            .drop_index(
-                Index::drop()
-                    .name("idx_tokyo_stock_exchanges_id")
-                    .to_owned(),
-            )
-            .await?;
 
         manager
             .drop_index(
