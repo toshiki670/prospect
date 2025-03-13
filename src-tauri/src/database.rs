@@ -26,7 +26,7 @@ pub async fn establish_connection(
     state: &DatabaseState,
     path: PathBuf,
 ) -> Result<(), DatabaseError> {
-    let db_url = format!("sqlite:{}", path.display());
+    let db_url = format!("sqlite:{}?mode=rwc", path.display());
 
     // 接続オプションの設定
     let mut opt = ConnectOptions::new(&db_url);
