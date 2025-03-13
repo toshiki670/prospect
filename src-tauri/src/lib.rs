@@ -33,9 +33,14 @@ pub async fn run() {
                 .resolve("database.db", BaseDirectory::AppLocalData)?;
 
             tauri::async_runtime::spawn(async move {
+                let db_state = db_state.clone();
                 database::establish_connection(&db_state, path)
                     .await
                     .unwrap(); // TODO: handle error
+
+                let pool = database::get_connection(&db_state).await.unwrap(); // TODO: handle error
+
+                database::migrate_database(&pool).await.unwrap(); // TODO: handle error
             });
 
             Ok(())

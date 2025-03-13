@@ -1,3 +1,4 @@
+use migration::{Migrator, MigratorTrait};
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::{path::PathBuf, sync::Arc};
 use tokio::sync::RwLock;
@@ -11,7 +12,10 @@ pub enum DatabaseError {
     ConnectionNotEstablished,
 
     #[error("Failed to establish connection")]
-    FailedToEstablishConnection(#[from] sea_orm::DbErr),
+    FailedToEstablishConnection(sea_orm::DbErr),
+
+    #[error("Failed to migrate database")]
+    FailedToMigrateDatabase(sea_orm::DbErr),
 }
 
 pub fn initialize() -> DatabaseState {
@@ -65,4 +69,10 @@ pub async fn get_connection(state: &DatabaseState) -> Result<DatabaseConnection,
     } else {
         unreachable!() // because checked at the beginning
     }
+}
+
+pub async fn migrate_database(pool: &DatabaseConnection) -> Result<(), DatabaseError> {
+    Migrator::up(pool, None)
+        .await
+        .map_err(DatabaseError::FailedToMigrateDatabase)
 }
