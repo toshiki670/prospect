@@ -16,7 +16,7 @@ pub async fn run() {
     let db_state = database::initialize();
 
     let router = Router::new()
-        .route("/sample/:id", get(sample))
+        .route("/sample/{id}", get(sample))
         .with_state(db_state.clone());
 
     tauri::Builder::default()
