@@ -1,6 +1,10 @@
 use crate::domain::shared_kernel::{created_at::CreatedAt, id::Id, updated_at::UpdatedAt};
 
-use super::{english_name::EnglishName, japanese_name::JapaneseName, local_code::LocalCode, section::Section, sector17_code::Sector17Code, sector33_code::Sector33Code, size_code::SizeCode};
+use super::{
+    english_name::EnglishName, japanese_name::JapaneseName, local_code::LocalCode,
+    section::Section, sector17_code::Sector17Code, sector33_code::Sector33Code,
+    size_code::SizeCode,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TokyoStockExchange {
@@ -15,4 +19,3 @@ pub struct TokyoStockExchange {
     pub created_at: CreatedAt,
     pub updated_at: UpdatedAt,
 }
-
