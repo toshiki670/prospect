@@ -1,5 +1,4 @@
 mod database;
-mod error;
 mod router;
 
 mod application;
