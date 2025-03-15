@@ -1,0 +1,147 @@
+---
+description: Backend (src-tauri) coding rules and guidelines
+globs: ["src-tauri/**/*.rs"]
+alwaysApply: true
+---
+
+# Backend Coding Rules
+
+## プロジェクト構造
+- `src-tauri/src/` 以下は以下の構造を維持する
+  - `domain/`: ドメインロジックを含むモジュール
+  - `application/`: ユースケースを実装
+  - `infrastructure/`: 外部システムとの連携実装
+  - `interface/`: APIエンドポイントの定義
+
+## コンテキスト構成
+### 基本原則
+- 各ドメインコンテキストは独立したモジュールとして実装
+- コンテキスト間の依存関係は明示的に定義
+- 共有カーネル（shared_kernel）以外での直接的な依存を避ける
+
+### フォルダ構造
+```
+src-tauri/src/
+├── domain/
+│   ├── shared_kernel/      # 共有カーネル
+│   │   ├── id.rs          # 共通ID型
+│   │   ├── created_at.rs  # 作成日時
+│   │   └── updated_at.rs  # 更新日時
+│   │
+│   ├── context_a/         # コンテキストA
+│   │   ├── mod.rs         # コンテキストのパブリックAPI
+│   │   ├── context_a.rs   # メインのドメインモデル
+│   │   ├── name.rs        # 値オブジェクト
+│   │   ├── code.rs        # 値オブジェクト
+│   │
+│   └── context_b/         # コンテキストB
+│       └── ...
+│
+├── application/
+│   ├── context_a/         # コンテキストAのユースケース
+│   │   ├── commands/      # コマンド（書き込み操作）
+│   │   └── queries/       # クエリ（読み取り操作）
+│   └── context_b/
+│
+├── infrastructure/
+│   ├── context_a/         # コンテキストAのインフラ実装
+│   │   ├── repositories/  # リポジトリ実装
+│   │   └── services/      # 外部サービス連携
+│   └── context_b/
+│
+└── interface/
+    ├── context_a/         # コンテキストAのAPI
+    │   ├── handlers/      # リクエストハンドラ
+    │   └── dto/           # データ転送オブジェクト
+    └── context_b/
+```
+
+### 命名規則
+- コンテキスト名は業務ドメインを反映した名前を使用
+  - 例: `tokyo_stock_exchange`, `portfolio`, `market_data`
+- 各コンテキストのモジュール名はスネークケースで記述
+- コンテキスト固有の型名はコンテキストを接頭辞として使用可能
+  - 例: `TokyoStockExchangeRepository`, `PortfolioService`
+- ファイル名はドメインの概念をそのまま表現
+  - 例: `tokyo_stock_exchange.rs`, `portfolio.rs`
+  - 接尾辞（`entity`, `value` など）は不要
+
+### コンテキスト間の通信
+- コンテキスト間の依存関係は`application`層で解決
+- 必要に応じてアンチコラプションレイヤーを実装
+- 共有データ構造は`shared_kernel`に定義
+
+### 実装規則
+- 各コンテキストは独自の`Error`型を定義可能
+- コンテキスト固有のバリデーションルールは各コンテキスト内で定義
+- 共通ロジックは`shared_kernel`に抽出する前に慎重に検討
+
+## ドメインルール
+### Value Objects
+- 値オブジェクトは以下の特徴を持つこと
+  ```rust
+  #[derive(Default, Debug, Clone, PartialEq, Eq)]
+  pub struct ValueObject(Type);
+
+  impl core::ops::Deref for ValueObject {
+      type Target = Type;
+      fn deref(&'_ self) -> &'_ Self::Target {
+          &self.0
+      }
+  }
+  ```
+
+### バリデーション
+- 値オブジェクトは `TryFrom` を実装し、バリデーションを行うこと
+- バリデーションエラーは `DomainError::ValidationError` を使用すること
+  ```rust
+  impl TryFrom<String> for ValueObject {
+      type Error = anyhow::Error;
+
+      fn try_from(value: String) -> Result<Self, Self::Error> {
+          let obj = Self(value);
+          obj.validate()?;
+          Ok(obj)
+      }
+  }
+  ```
+
+### エラーハンドリング
+- ドメインエラーは `DomainError` 列挙型を使用
+- 技術的なエラーは `anyhow::Error` を使用
+- カスタムエラーは `thiserror` を使用して定義
+
+## テストルール
+- テストは `rstest` を使用して記述
+- アサーションには `pretty_assertions` を使用
+- テストケースは以下の命名規則に従う
+  - 正常系: `test_機能名_success`
+  - 異常系: `test_機能名_error`
+
+## データベース
+- Sea-ORMを使用したデータアクセス
+- マイグレーションは `migration` クレートに定義
+- コネクションプールの管理は `DatabaseState` を使用
+
+## 非同期処理
+- 非同期処理には `tokio` を使用
+- 状態共有には以下の条件をもとに使い分ける
+  - 変更が少ない場合には`Arc<RwLock<T>>` を使用
+  - 変更が多い場合には`Arc<Mutex<T>>` を使用
+
+## コメント規則
+- 公開API（pub）には必ずドキュメンテーションコメントを付ける
+- 複雑なロジックには理由を説明するコメントを付ける
+- TODOコメントには担当者とチケット番号を記載
+
+## 命名規則
+- モジュール名: スネークケース (`tokyo_stock_exchange`)
+- 構造体名: アッパーキャメルケース (`TokyoStockExchange`)
+- メソッド名: スネークケース (`validate_local_code`)
+- 定数名: アッパースネークケース (`MAX_CONNECTIONS`)
+
+## 依存関係
+- 新しい依存クレートの追加時は以下を確認
+  - ライセンス
+  - メンテナンス状態
+  - セキュリティ上の問題の有無
