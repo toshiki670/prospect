@@ -44,20 +44,20 @@ use crate::domain::DomainError;
 /// | サービス業           | 9050       | サービス業              | 22     |
 ///
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct Sector33Code(Option<u16>);
+pub struct Sector33Code(Option<i16>);
 
 impl core::ops::Deref for Sector33Code {
-    type Target = Option<u16>;
+    type Target = Option<i16>;
 
     fn deref(&'_ self) -> &'_ Self::Target {
         &self.0
     }
 }
 
-impl TryFrom<Option<u16>> for Sector33Code {
+impl TryFrom<Option<i16>> for Sector33Code {
     type Error = anyhow::Error;
 
-    fn try_from(value: Option<u16>) -> Result<Self, anyhow::Error> {
+    fn try_from(value: Option<i16>) -> Result<Self, anyhow::Error> {
         let value = Self(value);
 
         value.validate()?;
@@ -163,7 +163,7 @@ mod tests {
     #[case::other_financial(Some(7200))] // その他金融業
     #[case::real_estate(Some(8050))] // 不動産業
     #[case::services(Some(9050))] // サービス業
-    fn test_validate_sector33_code_success(#[case] code: Option<u16>) {
+    fn test_validate_sector33_code_success(#[case] code: Option<i16>) {
         let sector33_code = Sector33Code::try_from(code);
         assert!(sector33_code.is_ok());
     }
@@ -173,7 +173,7 @@ mod tests {
     #[case::invalid_code(Some(1000), "Invalid sector33 code")] // 1000は存在しない
     #[case::too_large(Some(9999), "Invalid sector33 code")] // 9999は存在しない
     #[case::not_defined(Some(3999), "Invalid sector33 code")] // 3999は定義されていない
-    fn test_validate_sector33_code_error(#[case] code: Option<u16>, #[case] expected_error: &str) {
+    fn test_validate_sector33_code_error(#[case] code: Option<i16>, #[case] expected_error: &str) {
         let sector33_code = Sector33Code::try_from(code);
 
         assert!(sector33_code.is_err());
@@ -186,7 +186,7 @@ mod tests {
     #[rstest]
     #[case::none(None, None)]
     #[case::foods(Some(3050), Some(3050))] // 食料品
-    fn test_deref(#[case] input: Option<u16>, #[case] expected: Option<u16>) {
+    fn test_deref(#[case] input: Option<i16>, #[case] expected: Option<i16>) {
         let sector33_code = Sector33Code::try_from(input).unwrap();
         assert_eq!(*sector33_code, expected);
     }
@@ -223,7 +223,7 @@ mod tests {
     #[case::other_financial(Some(7200), "その他金融業")]
     #[case::real_estate(Some(8050), "不動産業")]
     #[case::services(Some(9050), "サービス業")]
-    fn test_display(#[case] input: Option<u16>, #[case] expected: &str) {
+    fn test_display(#[case] input: Option<i16>, #[case] expected: &str) {
         let sector33_code = Sector33Code::try_from(input).unwrap();
         assert_eq!(format!("{}", sector33_code), expected);
     }

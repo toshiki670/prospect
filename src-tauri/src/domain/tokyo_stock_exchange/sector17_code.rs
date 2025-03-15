@@ -28,20 +28,20 @@ use crate::domain::DomainError;
 /// | 17   | 不動産                    |
 ///
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct Sector17Code(Option<u16>);
+pub struct Sector17Code(Option<i16>);
 
 impl core::ops::Deref for Sector17Code {
-    type Target = Option<u16>;
+    type Target = Option<i16>;
 
     fn deref(&'_ self) -> &'_ Self::Target {
         &self.0
     }
 }
 
-impl TryFrom<Option<u16>> for Sector17Code {
+impl TryFrom<Option<i16>> for Sector17Code {
     type Error = anyhow::Error;
 
-    fn try_from(value: Option<u16>) -> Result<Self, anyhow::Error> {
+    fn try_from(value: Option<i16>) -> Result<Self, anyhow::Error> {
         let value = Self(value);
 
         value.validate()?;
@@ -113,7 +113,7 @@ mod tests {
     #[case::banks(Some(15))] // 銀行
     #[case::financial(Some(16))] // 金融（除く銀行）
     #[case::real_estate(Some(17))] // 不動産
-    fn test_validate_sector17_code_success(#[case] code: Option<u16>) {
+    fn test_validate_sector17_code_success(#[case] code: Option<i16>) {
         let sector17_code = Sector17Code::try_from(code);
         assert!(sector17_code.is_ok());
     }
@@ -123,7 +123,7 @@ mod tests {
     #[case::invalid_code(Some(1000), "Invalid sector17 code")] // 1000は存在しない
     #[case::too_large(Some(9999), "Invalid sector17 code")] // 9999は存在しない
     #[case::not_defined(Some(3999), "Invalid sector17 code")] // 3999は定義されていない
-    fn test_validate_sector17_code_error(#[case] code: Option<u16>, #[case] expected_error: &str) {
+    fn test_validate_sector17_code_error(#[case] code: Option<i16>, #[case] expected_error: &str) {
         let sector17_code = Sector17Code::try_from(code);
 
         assert!(sector17_code.is_err());
@@ -136,7 +136,7 @@ mod tests {
     #[rstest]
     #[case::none(None, None)]
     #[case::foods(Some(1), Some(1))] // 食品
-    fn test_deref(#[case] input: Option<u16>, #[case] expected: Option<u16>) {
+    fn test_deref(#[case] input: Option<i16>, #[case] expected: Option<i16>) {
         let sector17_code = Sector17Code::try_from(input).unwrap();
         assert_eq!(*sector17_code, expected);
     }
@@ -160,7 +160,7 @@ mod tests {
     #[case::banks(Some(15), "銀行")]
     #[case::financial(Some(16), "金融（除く銀行）")]
     #[case::real_estate(Some(17), "不動産")]
-    fn test_display(#[case] input: Option<u16>, #[case] expected: &str) {
+    fn test_display(#[case] input: Option<i16>, #[case] expected: &str) {
         let sector17_code = Sector17Code::try_from(input).unwrap();
         assert_eq!(format!("{}", sector17_code), expected);
     }
