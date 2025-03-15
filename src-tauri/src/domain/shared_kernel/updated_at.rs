@@ -10,3 +10,9 @@ impl core::ops::Deref for UpdatedAt {
         &self.0
     }
 }
+
+impl From<DateTime<Utc>> for UpdatedAt {
+    fn from(value: DateTime<Utc>) -> Self {
+        Self(value.with_timezone(&Local))
+    }
+}
