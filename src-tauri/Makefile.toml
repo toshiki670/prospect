@@ -19,6 +19,23 @@ cargo install cargo-watch
 '''
 ]
 
+[tasks.prepare_development]
+description = "Create .env file."
+category = "Preparation"
+workspace = false
+command = "cp"
+args = ["development.env", ".env"]
+
+[tasks.refresh_database]
+description = "Refresh the database"
+category = "Development"
+workspace = false
+script = ['''
+cargo run -p migration -- fresh
+sea-orm-cli generate entity -o src/infrastructure/persistence/entities
+'''
+]
+
 # For the documentation
 [tasks.d]
 description = "Generate documentation for the self package"
