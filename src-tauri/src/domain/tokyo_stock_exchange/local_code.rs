@@ -15,11 +15,11 @@ impl TryFrom<String> for LocalCode {
     type Error = anyhow::Error;
 
     fn try_from(value: String) -> Result<Self, anyhow::Error> {
-        let local_code = Self(value);
+        let value = Self(value);
 
-        local_code.validate()?;
+        value.validate()?;
 
-        Ok(local_code)
+        Ok(value)
     }
 }
 
