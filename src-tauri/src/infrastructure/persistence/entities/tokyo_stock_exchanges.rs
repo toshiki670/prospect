@@ -9,10 +9,10 @@ pub struct Model {
     pub id: i32,
     #[sea_orm(unique)]
     pub local_code: String,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub english_name: Option<String>,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub japanese_name: Option<String>,
+    #[sea_orm(column_type = "Text")]
+    pub english_name: String,
+    #[sea_orm(column_type = "Text")]
+    pub japanese_name: String,
     pub section: String,
     pub sector33_code: Option<i16>,
     pub sector17_code: Option<i16>,
