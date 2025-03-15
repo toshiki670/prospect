@@ -1,16 +1,16 @@
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
-pub struct EnglishName(Option<String>);
+pub struct EnglishName(String);
 
 impl core::ops::Deref for EnglishName {
-    type Target = Option<String>;
+    type Target = String;
 
     fn deref(&'_ self) -> &'_ Self::Target {
         &self.0
     }
 }
 
-impl From<Option<String>> for EnglishName {
-    fn from(value: Option<String>) -> Self {
+impl From<String> for EnglishName {
+    fn from(value: String) -> Self {
         Self(value)
     }
 }
