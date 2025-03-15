@@ -23,6 +23,12 @@ impl TryFrom<String> for LocalCode {
     }
 }
 
+impl std::fmt::Display for LocalCode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 impl LocalCode {
     pub fn validate(&self) -> anyhow::Result<()> {
         let value = self.as_str();
