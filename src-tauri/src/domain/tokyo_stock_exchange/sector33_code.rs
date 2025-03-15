@@ -80,6 +80,48 @@ impl Sector33Code {
     }
 }
 
+impl std::fmt::Display for Sector33Code {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.0 {
+            Some(50) => write!(f, "水産・農林業"),
+            Some(1050) => write!(f, "鉱業"),
+            Some(2050) => write!(f, "建設業"),
+            Some(3050) => write!(f, "食料品"),
+            Some(3100) => write!(f, "繊維製品"),
+            Some(3150) => write!(f, "パルプ・紙"),
+            Some(3200) => write!(f, "化学"),
+            Some(3250) => write!(f, "医薬品"),
+            Some(3300) => write!(f, "石油・石炭製品"),
+            Some(3350) => write!(f, "ゴム製品"),
+            Some(3400) => write!(f, "ガラス・土石製品"),
+            Some(3450) => write!(f, "鉄鋼"),
+            Some(3500) => write!(f, "非鉄金属"),
+            Some(3550) => write!(f, "金属製品"),
+            Some(3600) => write!(f, "機械"),
+            Some(3650) => write!(f, "電気機器"),
+            Some(3700) => write!(f, "輸送用機器"),
+            Some(3750) => write!(f, "精密機器"),
+            Some(3800) => write!(f, "その他製品"),
+            Some(4050) => write!(f, "電気・ガス業"),
+            Some(5050) => write!(f, "陸運業"),
+            Some(5100) => write!(f, "海運業"),
+            Some(5150) => write!(f, "空運業"),
+            Some(5200) => write!(f, "倉庫・運輸関連業"),
+            Some(5250) => write!(f, "情報・通信業"),
+            Some(6050) => write!(f, "卸売業"),
+            Some(6100) => write!(f, "小売業"),
+            Some(7050) => write!(f, "銀行業"),
+            Some(7100) => write!(f, "証券・商品先物取引業"),
+            Some(7150) => write!(f, "保険業"),
+            Some(7200) => write!(f, "その他金融業"),
+            Some(8050) => write!(f, "不動産業"),
+            Some(9050) => write!(f, "サービス業"),
+            Some(_) => write!(f, "不明な業種"),
+            None => write!(f, "-"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -147,5 +189,42 @@ mod tests {
     fn test_deref(#[case] input: Option<u16>, #[case] expected: Option<u16>) {
         let sector33_code = Sector33Code::try_from(input).unwrap();
         assert_eq!(*sector33_code, expected);
+    }
+
+    #[rstest]
+    #[case::none(None, "-")]
+    #[case::foods(Some(3050), "食料品")]
+    #[case::textiles(Some(3100), "繊維製品")]
+    #[case::pulp_paper(Some(3150), "パルプ・紙")]
+    #[case::chemicals(Some(3200), "化学")]
+    #[case::pharmaceutical(Some(3250), "医薬品")]
+    #[case::oil_coal(Some(3300), "石油・石炭製品")]
+    #[case::rubber(Some(3350), "ゴム製品")]
+    #[case::glass_ceramics(Some(3400), "ガラス・土石製品")]
+    #[case::steel(Some(3450), "鉄鋼")]
+    #[case::nonferrous_metals(Some(3500), "非鉄金属")]
+    #[case::metal_products(Some(3550), "金属製品")]
+    #[case::machinery(Some(3600), "機械")]
+    #[case::electric_appliances(Some(3650), "電気機器")]
+    #[case::transportation(Some(3700), "輸送用機器")]
+    #[case::precision(Some(3750), "精密機器")]
+    #[case::other_products(Some(3800), "その他製品")]
+    #[case::electric_power(Some(4050), "電気・ガス業")]
+    #[case::land_transport(Some(5050), "陸運業")]
+    #[case::marine_transport(Some(5100), "海運業")]
+    #[case::air_transport(Some(5150), "空運業")]
+    #[case::warehouse(Some(5200), "倉庫・運輸関連業")]
+    #[case::information(Some(5250), "情報・通信業")]
+    #[case::wholesale(Some(6050), "卸売業")]
+    #[case::retail(Some(6100), "小売業")]
+    #[case::banks(Some(7050), "銀行業")]
+    #[case::securities(Some(7100), "証券・商品先物取引業")]
+    #[case::insurance(Some(7150), "保険業")]
+    #[case::other_financial(Some(7200), "その他金融業")]
+    #[case::real_estate(Some(8050), "不動産業")]
+    #[case::services(Some(9050), "サービス業")]
+    fn test_display(#[case] input: Option<u16>, #[case] expected: &str) {
+        let sector33_code = Sector33Code::try_from(input).unwrap();
+        assert_eq!(format!("{}", sector33_code), expected);
     }
 }
