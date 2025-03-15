@@ -18,9 +18,9 @@ impl MigrationTrait for Migration {
                     .col(text_null(TokyoStockExchanges::EnglishName))
                     .col(text_null(TokyoStockExchanges::JapaneseName))
                     .col(string(TokyoStockExchanges::Section))
-                    .col(small_integer(TokyoStockExchanges::Sector33Code))
-                    .col(small_integer(TokyoStockExchanges::Sector17Code))
-                    .col(small_integer(TokyoStockExchanges::SizeCode))
+                    .col(small_integer_null(TokyoStockExchanges::Sector33Code))
+                    .col(small_integer_null(TokyoStockExchanges::Sector17Code))
+                    .col(small_integer_null(TokyoStockExchanges::SizeCode))
                     .to_owned(),
             ))
             .await?;
