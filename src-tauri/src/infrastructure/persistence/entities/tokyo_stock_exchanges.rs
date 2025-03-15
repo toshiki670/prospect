@@ -14,9 +14,9 @@ pub struct Model {
     #[sea_orm(column_type = "Text", nullable)]
     pub japanese_name: Option<String>,
     pub section: String,
-    pub sector33_code: i16,
-    pub sector17_code: i16,
-    pub size_code: i16,
+    pub sector33_code: Option<i16>,
+    pub sector17_code: Option<i16>,
+    pub size_code: Option<i16>,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
