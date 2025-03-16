@@ -33,3 +33,8 @@ pub trait TokyoStockExchangeCommandRepository {
     ) -> anyhow::Result<TokyoStockExchange>;
     async fn delete(&self, id: &Id) -> anyhow::Result<()>;
 }
+
+#[async_trait]
+pub trait TokyoStockExchangeAttributesQueryRepository {
+    async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchangeAttributes>>;
+}
