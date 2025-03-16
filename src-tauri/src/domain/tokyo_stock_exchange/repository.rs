@@ -1,4 +1,5 @@
 use crate::domain::shared_kernel::id::Id;
+use async_trait::async_trait;
 
 use super::{
     local_code::LocalCode,
@@ -10,6 +11,7 @@ pub trait TokyoStockExchangeRepository:
 {
 }
 
+#[async_trait]
 pub trait TokyoStockExchangeQueryRepository {
     async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>>;
     async fn find_by_local_code(
@@ -19,6 +21,7 @@ pub trait TokyoStockExchangeQueryRepository {
     async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchange>>;
 }
 
+#[async_trait]
 pub trait TokyoStockExchangeCommandRepository {
     async fn create(
         &self,
