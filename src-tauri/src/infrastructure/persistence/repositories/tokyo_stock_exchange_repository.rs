@@ -1,6 +1,7 @@
 use std::ops::Deref as _;
 
 use anyhow::Context as _;
+use async_trait::async_trait;
 
 use crate::{
     domain::{
@@ -83,6 +84,7 @@ impl TokyoStockExchangeRepositoryImpl {
     }
 }
 
+#[async_trait]
 impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
     async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>> {
         let id = *id.deref();
@@ -136,6 +138,7 @@ impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
     }
 }
 
+#[async_trait]
 impl TokyoStockExchangeCommandRepository for TokyoStockExchangeRepositoryImpl {
     async fn create(
         &self,
