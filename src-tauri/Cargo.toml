@@ -32,6 +32,7 @@ ipc-if = { path = "./ipc-if" }
 migration = { path = "./migration" }
 
 anyhow = "1.0.97"
+async-trait = "0.1.88"
 axum = "0.8.1"
 chrono = { version = "0.4.40", features = ["serde"] }
 sea-orm = { version = "1.1.7", features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }

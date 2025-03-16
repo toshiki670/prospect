@@ -8,3 +8,9 @@ impl core::ops::Deref for JapaneseName {
         &self.0
     }
 }
+
+impl From<String> for JapaneseName {
+    fn from(value: String) -> Self {
+        Self(value)
+    }
+}

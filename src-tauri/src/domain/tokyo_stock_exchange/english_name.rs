@@ -8,3 +8,9 @@ impl core::ops::Deref for EnglishName {
         &self.0
     }
 }
+
+impl From<String> for EnglishName {
+    fn from(value: String) -> Self {
+        Self(value)
+    }
+}
