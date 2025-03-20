@@ -1,5 +1,5 @@
 // src-tauri/src/router.rs
-use axum::{body::Body, http::Request, routing::Router};
+use axum::{body::Body, http::Request, response::Response, routing::Router};
 use serde_json::{Value, json};
 use std::sync::Arc;
 use tower::ServiceExt as _;
