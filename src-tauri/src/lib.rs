@@ -7,12 +7,13 @@ mod infrastructure;
 mod interface;
 
 use axum::{
-    Json, Router,
+    Router,
     extract::{Path, Query, State},
-    http::StatusCode,
-    routing::get,
+    routing::{get, post},
 };
+use interface::import::import_tokyo_stock_exchange;
 use ipc_if::sample::*;
+use router::AxumResult;
 use tauri::{Manager as _, path::BaseDirectory};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -21,6 +22,10 @@ pub async fn run() {
 
     let router = Router::new()
         .route("/sample/{id}", get(sample))
+        .route(
+            "/import/tokyo_stock_exchange",
+            post(import_tokyo_stock_exchange),
+        )
         .with_state(db_state.clone());
 
     tauri::Builder::default()
@@ -57,12 +62,11 @@ async fn sample(
     State(pool): State<database::DatabaseState>,
     Path(_id): Path<u32>,
     Query(_params): Query<SampleQuery>,
-) -> Result<Json<Sample>, (StatusCode, String)> {
+) -> AxumResult<axum::Json<Sample>> {
     let _pool = database::get_connection(&pool)
-        .await
-        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+        .await?;
 
-    Ok(Json(Sample {
+    Ok(axum::Json(Sample {
         id: 1,
         title: "title".to_string(),
         body: "body".to_string(),
