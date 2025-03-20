@@ -1,4 +1,4 @@
-use crate::domain::DomainError;
+use crate::app_error::AppError;
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct LocalCode(String);
@@ -35,16 +35,16 @@ impl LocalCode {
 
         if value.is_empty() {
             // When the local code is empty
-            Err(DomainError::ValidationError("Local code is empty".to_string()).into())
+            Err(AppError::BadRequest("Local code is empty".to_string()).into())
         } else if value.len() != 4 {
             // When the local code is not 4 digits
-            Err(DomainError::ValidationError("Local code must be 4 digits".to_string()).into())
+            Err(AppError::BadRequest("Local code must be 4 digits".to_string()).into())
         } else if !value
             .chars()
             .all(|c| c.is_ascii_digit() || c.is_ascii_alphabetic())
         {
             // When there are characters other than numbers and alphabets
-            Err(DomainError::ValidationError("Local code must be alphanumeric".to_string()).into())
+            Err(AppError::BadRequest("Local code must be alphanumeric".to_string()).into())
         } else {
             // When the local code is valid
             Ok(())
@@ -78,7 +78,7 @@ mod tests {
 
         assert!(local_code.is_err());
 
-        let error: DomainError = local_code.unwrap_err().try_into().unwrap();
+        let error: AppError = local_code.unwrap_err().try_into().unwrap();
         let error_message: String = error.into();
         assert_eq!(error_message, expected_error);
     }

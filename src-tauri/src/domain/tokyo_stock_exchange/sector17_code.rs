@@ -1,4 +1,4 @@
-use crate::domain::DomainError;
+use crate::app_error::AppError;
 
 /// 17セクターコード
 ///
@@ -55,7 +55,7 @@ impl Sector17Code {
         match self.0 {
             Some(code) => match code {
                 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 => Ok(()),
-                _ => Err(DomainError::ValidationError("Invalid sector17 code".to_string()).into()),
+                _ => Err(AppError::BadRequest("Invalid sector17 code".to_string()).into()),
             },
             None => Ok(()),
         }
@@ -128,7 +128,7 @@ mod tests {
 
         assert!(sector17_code.is_err());
 
-        let error: DomainError = sector17_code.unwrap_err().try_into().unwrap();
+        let error: AppError = sector17_code.unwrap_err().try_into().unwrap();
         let error_message: String = error.into();
         assert_eq!(error_message, expected_error);
     }
