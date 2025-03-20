@@ -18,6 +18,18 @@ pub enum DatabaseError {
     FailedToMigrateDatabase(sea_orm::DbErr),
 }
 
+impl IntoResponse for DatabaseError {
+    fn into_response(self) -> Response {
+        (axum::http::StatusCode::INTERNAL_SERVER_ERROR, self.to_string()).into_response()
+    }
+}
+
+impl<> From<DatabaseError> for Response {
+    fn from(error: DatabaseError) -> Self {
+        error.into_response()
+    }
+}
+
 pub fn initialize() -> DatabaseState {
     Arc::new(RwLock::new(None))
 }
