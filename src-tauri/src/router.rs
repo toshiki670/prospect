@@ -80,3 +80,6 @@ pub async fn axum_api(
 ) -> Result<Value, String> {
     adapter.0.handle_command(path, method, payload).await
 }
+
+// https://github.com/tokio-rs/axum/blob/axum-v0.8.2/examples/error-handling/src/main.rs
+pub type AxumResult<T, E = Response> = core::result::Result<T, E>;
