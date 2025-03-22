@@ -1,3 +1,4 @@
+mod app_error;
 mod database;
 mod router;
 
@@ -63,8 +64,7 @@ async fn sample(
     Path(_id): Path<u32>,
     Query(_params): Query<SampleQuery>,
 ) -> AxumResult<axum::Json<Sample>> {
-    let _pool = database::get_connection(&pool)
-        .await?;
+    let _pool = database::get_connection(&pool).await;
 
     Ok(axum::Json(Sample {
         id: 1,
