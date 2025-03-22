@@ -7,12 +7,12 @@ use super::{
 };
 
 pub trait TokyoStockExchangeRepository:
-    TokyoStockExchangeQueryRepository + TokyoStockExchangeCommandRepository
+    TokyoStockExchangeQueryRepository + TokyoStockExchangeCommandRepository + Send + Sync
 {
 }
 
 #[async_trait]
-pub trait TokyoStockExchangeQueryRepository {
+pub trait TokyoStockExchangeQueryRepository: Send + Sync {
     async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>>;
     async fn find_by_local_code(
         &self,
@@ -22,7 +22,7 @@ pub trait TokyoStockExchangeQueryRepository {
 }
 
 #[async_trait]
-pub trait TokyoStockExchangeCommandRepository {
+pub trait TokyoStockExchangeCommandRepository: Send + Sync {
     async fn create(
         &self,
         tokyo_stock_exchange: &TokyoStockExchangeAttributes,
@@ -35,6 +35,6 @@ pub trait TokyoStockExchangeCommandRepository {
 }
 
 #[async_trait]
-pub trait TokyoStockExchangeAttributesQueryRepository {
+pub trait TokyoStockExchangeAttributesQueryRepository: Send + Sync {
     async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchangeAttributes>>;
 }

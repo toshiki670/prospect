@@ -8,7 +8,10 @@ use crate::{
         shared_kernel::id::Id,
         tokyo_stock_exchange::{
             local_code::LocalCode,
-            repository::{TokyoStockExchangeCommandRepository, TokyoStockExchangeQueryRepository},
+            repository::{
+                TokyoStockExchangeCommandRepository, TokyoStockExchangeQueryRepository,
+                TokyoStockExchangeRepository,
+            },
             section::Section,
             sector17_code::Sector17Code,
             sector33_code::Sector33Code,
@@ -83,6 +86,8 @@ impl TokyoStockExchangeRepositoryImpl {
         }
     }
 }
+
+impl TokyoStockExchangeRepository for TokyoStockExchangeRepositoryImpl {}
 
 #[async_trait]
 impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
