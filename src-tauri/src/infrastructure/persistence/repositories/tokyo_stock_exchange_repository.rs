@@ -62,9 +62,9 @@ impl TokyoStockExchangeRepositoryImpl {
             english_name: Set(domain.english_name.deref().clone()),
             japanese_name: Set(domain.japanese_name.deref().clone()),
             section: Set(domain.section.to_string()),
-            sector33_code: Set(domain.sector33_code.deref().clone()),
-            sector17_code: Set(domain.sector17_code.deref().clone()),
-            size_code: Set(domain.size_code.deref().clone()),
+            sector33_code: Set(*domain.sector33_code.deref()),
+            sector17_code: Set(*domain.sector17_code.deref()),
+            size_code: Set(*domain.size_code.deref()),
             ..Default::default()
         }
     }
@@ -74,14 +74,14 @@ impl TokyoStockExchangeRepositoryImpl {
         domain: &TokyoStockExchange,
     ) -> tokyo_stock_exchanges::ActiveModel {
         tokyo_stock_exchanges::ActiveModel {
-            id: Set(domain.id.deref().clone()),
+            id: Set(*domain.id.deref()),
             local_code: Set(domain.local_code.to_string()),
             english_name: Set(domain.english_name.deref().clone()),
             japanese_name: Set(domain.japanese_name.deref().clone()),
             section: Set(domain.section.to_string()),
-            sector33_code: Set(domain.sector33_code.deref().clone()),
-            sector17_code: Set(domain.sector17_code.deref().clone()),
-            size_code: Set(domain.size_code.deref().clone()),
+            sector33_code: Set(*domain.sector33_code.deref()),
+            sector17_code: Set(*domain.sector17_code.deref()),
+            size_code: Set(*domain.size_code.deref()),
             ..Default::default()
         }
     }
