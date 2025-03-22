@@ -73,7 +73,7 @@ impl Sector33Code {
                 50 | 1050 | 2050 | 3050 | 3100 | 3150 | 3200 | 3250 | 3300 | 3350 | 3400 | 3450
                 | 3500 | 3550 | 3600 | 3650 | 3700 | 3750 | 3800 | 4050 | 5050 | 5100 | 5150
                 | 5200 | 5250 | 6050 | 6100 | 7050 | 7100 | 7150 | 7200 | 8050 | 9050 => Ok(()),
-                _ => Err(AppError::BadRequest("Invalid sector33 code".to_string()).into()),
+                _ => Err(AppError::ImvalidValidation("Invalid sector33 code".to_string()).into()),
             },
             None => Ok(()),
         }
@@ -178,7 +178,7 @@ mod tests {
 
         assert!(sector33_code.is_err());
 
-        let error: AppError = sector33_code.unwrap_err().try_into().unwrap();
+        let error: AppError = sector33_code.unwrap_err().into();
         let error_message: String = error.into();
         assert_eq!(error_message, expected_error);
     }
