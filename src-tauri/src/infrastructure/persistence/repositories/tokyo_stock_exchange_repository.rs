@@ -109,8 +109,6 @@ impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
         &self,
         local_code: &LocalCode,
     ) -> anyhow::Result<Option<TokyoStockExchange>> {
-        // let local_code: String = local_code.to_string();
-
         let result = TokyoStockExchanges::find()
             .filter(tokyo_stock_exchanges::Column::LocalCode.eq(local_code.to_string()))
             .one(&self.conn)
@@ -190,13 +188,4 @@ impl TokyoStockExchangeCommandRepository for TokyoStockExchangeRepositoryImpl {
         tnx.commit().await?;
         Ok(result)
     }
-
-    // async fn delete(&self, id: &Id) -> anyhow::Result<()> {
-    //     tokyo_stock_exchanges::Entity::delete_by_id(**id)
-    //         .exec(&self.conn)
-    //         .await
-    //         .with_context(|| format!("Failed to delete tokyo stock exchange: {}", **id))?;
-
-    //     Ok(())
-    // }
 }
