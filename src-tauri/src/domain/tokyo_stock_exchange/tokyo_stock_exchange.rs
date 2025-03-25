@@ -8,7 +8,7 @@ use super::{
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TokyoStockExchange {
-    pub id: Option<Id>,
+    pub id: Id,
     pub local_code: LocalCode,
     pub english_name: EnglishName,
     pub japanese_name: JapaneseName,
@@ -18,4 +18,15 @@ pub struct TokyoStockExchange {
     pub size_code: SizeCode,
     pub created_at: CreatedAt,
     pub updated_at: UpdatedAt,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TokyoStockExchangeAttributes {
+    pub local_code: LocalCode,
+    pub english_name: EnglishName,
+    pub japanese_name: JapaneseName,
+    pub section: Section,
+    pub sector33_code: Sector33Code,
+    pub sector17_code: Sector17Code,
+    pub size_code: SizeCode,
 }

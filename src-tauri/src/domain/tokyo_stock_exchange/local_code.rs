@@ -1,4 +1,4 @@
-use crate::domain::DomainError;
+use crate::app_error::AppError;
 
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct LocalCode(String);
@@ -15,11 +15,17 @@ impl TryFrom<String> for LocalCode {
     type Error = anyhow::Error;
 
     fn try_from(value: String) -> Result<Self, anyhow::Error> {
-        let local_code = Self(value);
+        let value = Self(value);
 
-        local_code.validate()?;
+        value.validate()?;
 
-        Ok(local_code)
+        Ok(value)
+    }
+}
+
+impl std::fmt::Display for LocalCode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -29,16 +35,16 @@ impl LocalCode {
 
         if value.is_empty() {
             // When the local code is empty
-            Err(DomainError::ValidationError("Local code is empty".to_string()).into())
+            Err(AppError::ImvalidValidation("Local code is empty".to_string()).into())
         } else if value.len() != 4 {
             // When the local code is not 4 digits
-            Err(DomainError::ValidationError("Local code must be 4 digits".to_string()).into())
+            Err(AppError::ImvalidValidation("Local code must be 4 digits".to_string()).into())
         } else if !value
             .chars()
             .all(|c| c.is_ascii_digit() || c.is_ascii_alphabetic())
         {
             // When there are characters other than numbers and alphabets
-            Err(DomainError::ValidationError("Local code must be alphanumeric".to_string()).into())
+            Err(AppError::ImvalidValidation("Local code must be alphanumeric".to_string()).into())
         } else {
             // When the local code is valid
             Ok(())
@@ -72,7 +78,7 @@ mod tests {
 
         assert!(local_code.is_err());
 
-        let error: DomainError = local_code.unwrap_err().try_into().unwrap();
+        let error: AppError = local_code.unwrap_err().into();
         let error_message: String = error.into();
         assert_eq!(error_message, expected_error);
     }

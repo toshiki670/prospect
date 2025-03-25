@@ -3,6 +3,8 @@ use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::{path::PathBuf, sync::Arc};
 use tokio::sync::RwLock;
 
+use crate::app_error::AppError;
+
 pub type DatabaseState = Arc<RwLock<OptionalDatabaseConnection>>;
 pub type OptionalDatabaseConnection = Option<DatabaseConnection>;
 
@@ -16,6 +18,22 @@ pub enum DatabaseError {
 
     #[error("Failed to migrate database")]
     FailedToMigrateDatabase(sea_orm::DbErr),
+}
+
+impl From<DatabaseError> for AppError {
+    fn from(error: DatabaseError) -> Self {
+        match error {
+            DatabaseError::ConnectionNotEstablished => {
+                AppError::InternalServerError("Database connection not established".to_string())
+            }
+            DatabaseError::FailedToEstablishConnection(e) => {
+                AppError::InternalServerError(e.to_string())
+            }
+            DatabaseError::FailedToMigrateDatabase(e) => {
+                AppError::InternalServerError(e.to_string())
+            }
+        }
+    }
 }
 
 pub fn initialize() -> DatabaseState {

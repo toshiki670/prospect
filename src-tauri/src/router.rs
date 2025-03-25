@@ -1,5 +1,5 @@
 // src-tauri/src/router.rs
-use axum::{body::Body, http::Request, routing::Router};
+use axum::{body::Body, http::Request, response::Response, routing::Router};
 use serde_json::{Value, json};
 use std::sync::Arc;
 use tower::ServiceExt as _;
@@ -80,3 +80,6 @@ pub async fn axum_api(
 ) -> Result<Value, String> {
     adapter.0.handle_command(path, method, payload).await
 }
+
+// https://github.com/tokio-rs/axum/blob/axum-v0.8.2/examples/error-handling/src/main.rs
+pub type AxumResult<T, E = Response> = core::result::Result<T, E>;
