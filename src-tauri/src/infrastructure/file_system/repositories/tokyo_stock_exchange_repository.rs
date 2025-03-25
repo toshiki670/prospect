@@ -33,7 +33,7 @@ impl TokyoStockExchangeFileRepositoryImpl {
         }
     }
 
-    fn parse_sector_code(code: String) -> anyhow::Result<Option<i16>> {
+    fn parse_code(code: String) -> anyhow::Result<Option<i16>> {
         if code.contains("-") {
             return Ok(None);
         }
@@ -56,19 +56,19 @@ impl TokyoStockExchangeFileRepositoryImpl {
         let mut results = Vec::new();
 
         for (index, row) in range.rows().skip(1).enumerate() {
-            let sector33_code = Self::parse_sector_code(row[4].to_string()).with_context(|| {
+            let sector33_code = Self::parse_code(row[4].to_string()).with_context(|| {
                 format!(
                     "Failed to read: row={}, column={}, data={}",
                     index, 4, row[4]
                 )
             })?;
-            let sector17_code = Self::parse_sector_code(row[6].to_string()).with_context(|| {
+            let sector17_code = Self::parse_code(row[6].to_string()).with_context(|| {
                 format!(
                     "Failed to read: row={}, column={}, data={}",
                     index, 6, row[6]
                 )
             })?;
-            let size_code = Self::parse_sector_code(row[8].to_string()).with_context(|| {
+            let size_code = Self::parse_code(row[8].to_string()).with_context(|| {
                 format!(
                     "Failed to read: row={}, column={}, data={}",
                     index, 8, row[8]
