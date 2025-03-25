@@ -56,7 +56,9 @@ impl std::fmt::Display for SizeCode {
             Some(4) => write!(f, "TOPIX Mid400"),
             Some(6) => write!(f, "TOPIX Small 1"),
             Some(7) => write!(f, "TOPIX Small 2"),
-            Some(_) => write!(f, "Unknown size"),
+            Some(_) => {
+                unreachable!("Invalid size code: This code has been validated and should not exist")
+            }
             None => write!(f, "-"),
         }
     }

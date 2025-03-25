@@ -82,7 +82,9 @@ impl std::fmt::Display for Sector17Code {
             Some(15) => write!(f, "銀行"),
             Some(16) => write!(f, "金融（除く銀行）"),
             Some(17) => write!(f, "不動産"),
-            Some(_) => write!(f, "不明な業種"),
+            Some(_) => unreachable!(
+                "Invalid sector17 code: This code has been validated and should not exist"
+            ),
             None => write!(f, "-"),
         }
     }

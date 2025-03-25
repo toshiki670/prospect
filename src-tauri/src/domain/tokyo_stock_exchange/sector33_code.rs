@@ -116,7 +116,9 @@ impl std::fmt::Display for Sector33Code {
             Some(7200) => write!(f, "その他金融業"),
             Some(8050) => write!(f, "不動産業"),
             Some(9050) => write!(f, "サービス業"),
-            Some(_) => write!(f, "不明な業種"),
+            Some(_) => unreachable!(
+                "Invalid sector33 code: This code has been validated and should not exist"
+            ),
             None => write!(f, "-"),
         }
     }
