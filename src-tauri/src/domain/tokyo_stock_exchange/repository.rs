@@ -13,12 +13,12 @@ pub trait TokyoStockExchangeRepository:
 
 #[async_trait]
 pub trait TokyoStockExchangeQueryRepository: Send + Sync {
-    async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>>;
+    // async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>>;
     async fn find_by_local_code(
         &self,
         local_code: &LocalCode,
     ) -> anyhow::Result<Option<TokyoStockExchange>>;
-    async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchange>>;
+    // async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchange>>;
 }
 
 #[async_trait]
@@ -31,7 +31,7 @@ pub trait TokyoStockExchangeCommandRepository: Send + Sync {
         &self,
         tokyo_stock_exchange: &TokyoStockExchange,
     ) -> anyhow::Result<TokyoStockExchange>;
-    async fn delete(&self, id: &Id) -> anyhow::Result<()>;
+    // async fn delete(&self, id: &Id) -> anyhow::Result<()>;
 }
 
 #[async_trait]

@@ -91,19 +91,19 @@ impl TokyoStockExchangeRepository for TokyoStockExchangeRepositoryImpl {}
 
 #[async_trait]
 impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
-    async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>> {
-        let id = *id.deref();
+    // async fn find_by_id(&self, id: &Id) -> anyhow::Result<Option<TokyoStockExchange>> {
+    //     let id = *id.deref();
 
-        let result = TokyoStockExchanges::find_by_id(id)
-            .one(&self.conn)
-            .await
-            .with_context(|| format!("Failed to find tokyo stock exchange by id: {}", id))?;
+    //     let result = TokyoStockExchanges::find_by_id(id)
+    //         .one(&self.conn)
+    //         .await
+    //         .with_context(|| format!("Failed to find tokyo stock exchange by id: {}", id))?;
 
-        match result {
-            Some(model) => Ok(Some(self.to_domain(model).await?)),
-            None => Ok(None),
-        }
-    }
+    //     match result {
+    //         Some(model) => Ok(Some(self.to_domain(model).await?)),
+    //         None => Ok(None),
+    //     }
+    // }
 
     async fn find_by_local_code(
         &self,
@@ -128,19 +128,19 @@ impl TokyoStockExchangeQueryRepository for TokyoStockExchangeRepositoryImpl {
         }
     }
 
-    async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchange>> {
-        let models = TokyoStockExchanges::find()
-            .all(&self.conn)
-            .await
-            .context("Failed to find all tokyo stock exchanges")?;
+    // async fn find_all(&self) -> anyhow::Result<Vec<TokyoStockExchange>> {
+    //     let models = TokyoStockExchanges::find()
+    //         .all(&self.conn)
+    //         .await
+    //         .context("Failed to find all tokyo stock exchanges")?;
 
-        let mut exchanges = Vec::with_capacity(models.len());
-        for model in models {
-            exchanges.push(self.to_domain(model).await?);
-        }
+    //     let mut exchanges = Vec::with_capacity(models.len());
+    //     for model in models {
+    //         exchanges.push(self.to_domain(model).await?);
+    //     }
 
-        Ok(exchanges)
-    }
+    //     Ok(exchanges)
+    // }
 }
 
 #[async_trait]
@@ -191,12 +191,12 @@ impl TokyoStockExchangeCommandRepository for TokyoStockExchangeRepositoryImpl {
         Ok(result)
     }
 
-    async fn delete(&self, id: &Id) -> anyhow::Result<()> {
-        tokyo_stock_exchanges::Entity::delete_by_id(**id)
-            .exec(&self.conn)
-            .await
-            .with_context(|| format!("Failed to delete tokyo stock exchange: {}", **id))?;
+    // async fn delete(&self, id: &Id) -> anyhow::Result<()> {
+    //     tokyo_stock_exchanges::Entity::delete_by_id(**id)
+    //         .exec(&self.conn)
+    //         .await
+    //         .with_context(|| format!("Failed to delete tokyo stock exchange: {}", **id))?;
 
-        Ok(())
-    }
+    //     Ok(())
+    // }
 }
